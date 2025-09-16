@@ -1,0 +1,1253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Admission Portal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            text-align: center;
+            padding: 30px 20px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .form-container {
+            padding: 40px;
+        }
+
+        .form-section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            color: #333;
+            border-bottom: 2px solid #4facfe;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .form-group {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .form-group.full-width {
+            flex: 100%;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+            font-size: 0.95rem;
+        }
+
+        .required {
+            color: #e74c3c;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e1e8ed;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #4facfe;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
+        }
+
+        .error {
+            border-color: #e74c3c !important;
+            background-color: #fdf2f2;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 0.85rem;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .success {
+            border-color: #27ae60 !important;
+            background-color: #f2fdf2;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: auto;
+            margin-right: 10px;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(79, 172, 254, 0.3);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #4facfe;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #c3e6cb;
+            margin: 20px 0;
+            display: none;
+        }
+
+        .file-upload {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .file-upload input[type="file"] {
+            opacity: 0;
+            position: absolute;
+            z-index: -1;
+        }
+
+        .file-upload-label {
+            display: block;
+            padding: 12px 15px;
+            border: 2px dashed #4facfe;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            background: #f8f9fa;
+            transition: all 0.3s ease;
+        }
+
+        .file-upload-label:hover {
+            background: #e9ecef;
+            border-color: #00f2fe;
+        }
+
+        .file-name {
+            margin-top: 5px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                flex-direction: column;
+            }
+            
+            .form-group {
+                min-width: 100%;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .form-container {
+                padding: 20px;
+            }
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: #e1e8ed;
+            border-radius: 2px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4facfe, #00f2fe);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Student Admission Portal</h1>
+            <p>Complete your application for academic year 2025-26</p>
+        </div>
+
+        <div class="form-container">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+
+            <form id="admissionForm" novalidate>
+                <!-- Personal Information -->
+                <div class="form-section">
+                    <h2 class="section-title">Personal Information</h2>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="firstName">First Name <span class="required">*</span></label>
+                            <input type="text" id="firstName" name="firstName" required>
+                            <div class="error-message">First name is required</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="lastName">Last Name <span class="required">*</span></label>
+                            <input type="text" id="lastName" name="lastName" required>
+                            <div class="error-message">Last name is required</div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="email">Email Address <span class="required">*</span></label>
+                            <input type="email" id="email" name="email" required>
+                            <div class="error-message">Please enter a valid email address</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Phone Number <span class="required">*</span></label>
+                            <input type="tel" id="phone" name="phone" required>
+                            <div class="error-message">Please enter a valid phone number</div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="dateOfBirth">Date of Birth <span class="required">*</span></label>
+                            <input type="date" id="dateOfBirth" name="dateOfBirth" required>
+                            <div class="error-message">Date of birth is required</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="gender">Gender <span class="required">*</span></label>
+                            <select id="gender" name="gender" required>
+                                <option value="">Select Gender</option>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                                <option value="other">Other</option>
+                                <option value="prefer-not-to-say">Prefer not to say</option>
+                            </select>
+                            <div class="error-message">Please select your gender</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Address Information -->
+                <div class="form-section">
+                    <h2 class="section-title">Address Information</h2>
+                    <div class="form-group full-width">
+                        <label for="address">Street Address <span class="required">*</span></label>
+                        <input type="text" id="address" name="address" required>
+                        <div class="error-message">Street address is required</div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="city">City <span class="required">*</span></label>
+                            <input type="text" id="city" name="city" required>
+                            <div class="error-message">City is required</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="state">State/Province <span class="required">*</span></label>
+                            <input type="text" id="state" name="state" required>
+                            <div class="error-message">State/Province is required</div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="zipCode">ZIP/Postal Code <span class="required">*</span></label>
+                            <input type="text" id="zipCode" name="zipCode" required>
+                            <div class="error-message">ZIP/Postal code is required</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="country">Country <span class="required">*</span></label>
+                            <select id="country" name="country" required>
+                                <option value="">Select Country</option>
+                                <option value="us">United States</option>
+                                <option value="ca">Canada</option>
+                                <option value="uk">United Kingdom</option>
+                                <option value="au">Australia</option>
+                                <option value="in">India</option>
+                                <option value="other">Other</option>
+                            </select>
+                            <div class="error-message">Please select your country</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Academic Information -->
+                <div class="form-section">
+                    <h2 class="section-title">Academic Information</h2>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="program">Desired Program <span class="required">*</span></label>
+                            <select id="program" name="program" required>
+                                <option value="">Select Program</option>
+                                <option value="cs">Computer Science</option>
+                                <option value="eng">Engineering</option>
+                                <option value="business">Business Administration</option>
+                                <option value="medicine">Medicine</option>
+                                <option value="law">Law</option>
+                                <option value="arts">Liberal Arts</option>
+                            </select>
+                            <div class="error-message">Please select a program</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="startTerm">Start Term <span class="required">*</span></label>
+                            <select id="startTerm" name="startTerm" required>
+                                <option value="">Select Term</option>
+                                <option value="fall2025">Fall 2025</option>
+                                <option value="spring2026">Spring 2026</option>
+                                <option value="summer2026">Summer 2026</option>
+                            </select>
+                            <div class="error-message">Please select a start term</div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="gpa">Current GPA</label>
+                            <input type="number" id="gpa" name="gpa" min="0" max="4" step="0.01">
+                            <div class="error-message">Please enter a valid GPA (0-4.0)</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="testScore">Standardized Test Score (SAT/ACT)</label>
+                            <input type="number" id="testScore" name="testScore" min="0" max="1600">
+                            <div class="error-message">Please enter a valid test score</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Documents Upload -->
+                <div class="form-section">
+                    <h2 class="section-title">Required Documents</h2>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="transcript">Official Transcript <span class="required">*</span></label>
+                            <div class="file-upload">
+                                <input type="file" id="transcript" name="transcript" accept=".pdf,.doc,.docx" required>
+                                <label for="transcript" class="file-upload-label">
+                                    📄 Click to upload transcript
+                                </label>
+                                <div class="file-name"></div>
+                            </div>
+                            <div class="error-message">Please upload your official transcript</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="essay">Personal Statement <span class="required">*</span></label>
+                            <div class="file-upload">
+                                <input type="file" id="essay" name="essay" accept=".pdf,.doc,.docx" required>
+                                <label for="essay" class="file-upload-label">
+                                    📝 Click to upload personal statement
+                                </label>
+                                <div class="file-name"></div>
+                            </div>
+                            <div class="error-message">Please upload your personal statement</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Additional Information -->
+                <div class="form-section">
+                    <h2 class="section-title">Additional Information</h2>
+                    <div class="form-group full-width">
+                        <label for="additionalInfo">Additional Comments (Optional)</label>
+                        <textarea id="additionalInfo" name="additionalInfo" rows="4" placeholder="Share any additional information that might support your application..."></textarea>
+                    </div>
+                </div>
+
+                <!-- Terms and Conditions -->
+                <div class="form-section">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="terms" name="terms" required>
+                        <label for="terms">I agree to the <a href="#" style="color: #4facfe;">Terms and Conditions</a> <span class="required">*</span></label>
+                    </div>
+                    <div class="error-message">You must agree to the terms and conditions</div>
+                    
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="newsletter" name="newsletter">
+                        <label for="newsletter">I would like to receive updates about my application and university news</label>
+                    </div>
+                </div>
+
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>Submitting your application...</p>
+                </div>
+
+                <div class="success-message">
+                    <strong>Success!</strong> Your application has been submitted successfully. You will receive a confirmation email shortly.
+                </div>
+
+                <button type="submit" class="submit-btn">Submit Application</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Comprehensive Software Testing Implementation
+        class AdmissionFormValidator {
+            constructor() {
+                this.form = document.getElementById('admissionForm');
+                this.progressFill = document.getElementById('progressFill');
+                this.initializeEventListeners();
+                this.validationRules = this.setupValidationRules();
+                this.testData = this.setupTestData();
+            }
+
+            // Software Testing Rule 1: Input Validation
+            setupValidationRules() {
+                return {
+                    firstName: {
+                        required: true,
+                        minLength: 2,
+                        pattern: /^[a-zA-Z\s]+$/,
+                        errorMessage: 'First name must be at least 2 characters and contain only letters'
+                    },
+                    lastName: {
+                        required: true,
+                        minLength: 2,
+                        pattern: /^[a-zA-Z\s]+$/,
+                        errorMessage: 'Last name must be at least 2 characters and contain only letters'
+                    },
+                    email: {
+                        required: true,
+                        pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                        errorMessage: 'Please enter a valid email address'
+                    },
+                    phone: {
+                        required: true,
+                        pattern: /^[\+]?[1-9][\d]{0,15}$/,
+                        errorMessage: 'Please enter a valid phone number'
+                    },
+                    dateOfBirth: {
+                        required: true,
+                        customValidation: this.validateAge,
+                        errorMessage: 'You must be at least 16 years old'
+                    },
+                    gpa: {
+                        min: 0,
+                        max: 4,
+                        errorMessage: 'GPA must be between 0.0 and 4.0'
+                    },
+                    testScore: {
+                        min: 0,
+                        max: 1600,
+                        errorMessage: 'Test score must be between 0 and 1600'
+                    },
+                    zipCode: {
+                        required: true,
+                        pattern: /^[0-9]{5}(-[0-9]{4})?$|^[A-Z][0-9][A-Z] [0-9][A-Z][0-9]$/,
+                        errorMessage: 'Please enter a valid ZIP/Postal code'
+                    }
+                };
+            }
+
+            // Software Testing Rule 2: Test Data Management
+            setupTestData() {
+                return {
+                    validData: {
+                        firstName: 'John',
+                        lastName: 'Doe',
+                        email: 'john.doe@email.com',
+                        phone: '+1234567890',
+                        dateOfBirth: '2000-01-01',
+                        address: '123 Main St',
+                        city: 'Anytown',
+                        state: 'CA',
+                        zipCode: '12345',
+                        country: 'us',
+                        program: 'cs',
+                        startTerm: 'fall2025',
+                        gpa: '3.5',
+                        testScore: '1200'
+                    },
+                    invalidData: {
+                        firstName: '123',
+                        lastName: '',
+                        email: 'invalid-email',
+                        phone: 'abc',
+                        dateOfBirth: '2010-01-01',
+                        zipCode: 'invalid'
+                    }
+                };
+            }
+
+            // Software Testing Rule 3: Event Listeners and Real-time Validation
+            initializeEventListeners() {
+                this.form.addEventListener('submit', (e) => this.handleSubmit(e));
+                
+                // Real-time validation
+                this.form.addEventListener('input', (e) => this.validateField(e.target));
+                this.form.addEventListener('change', (e) => this.validateField(e.target));
+                
+                // File upload handlers
+                document.getElementById('transcript').addEventListener('change', (e) => this.handleFileUpload(e));
+                document.getElementById('essay').addEventListener('change', (e) => this.handleFileUpload(e));
+                
+                // Progress tracking
+                this.form.addEventListener('input', () => this.updateProgress());
+                this.form.addEventListener('change', () => this.updateProgress());
+
+                // Testing shortcuts (for development/testing purposes)
+                this.setupTestingShortcuts();
+            }
+
+            // Software Testing Rule 4: Boundary Value Analysis
+            validateAge(dateString) {
+                const birthDate = new Date(dateString);
+                const today = new Date();
+                const age = today.getFullYear() - birthDate.getFullYear();
+                const monthDiff = today.getMonth() - birthDate.getMonth();
+                
+                if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                    age--;
+                }
+                
+                return age >= 16 && age <= 120; // Boundary values: 16 (minimum) and 120 (maximum reasonable age)
+            }
+
+            // Software Testing Rule 5: Field Validation with Error Handling
+            validateField(field) {
+                const fieldName = field.name;
+                const fieldValue = field.value.trim();
+                const rules = this.validationRules[fieldName];
+                
+                if (!rules) return true;
+
+                let isValid = true;
+                let errorMessage = '';
+
+                // Required field validation
+                if (rules.required && !fieldValue) {
+                    isValid = false;
+                    errorMessage = `${this.getFieldLabel(fieldName)} is required`;
+                }
+
+                // Pattern validation
+                if (isValid && fieldValue && rules.pattern && !rules.pattern.test(fieldValue)) {
+                    isValid = false;
+                    errorMessage = rules.errorMessage;
+                }
+
+                // Length validation
+                if (isValid && fieldValue && rules.minLength && fieldValue.length < rules.minLength) {
+                    isValid = false;
+                    errorMessage = rules.errorMessage;
+                }
+
+                // Numeric range validation
+                if (isValid && fieldValue && (rules.min !== undefined || rules.max !== undefined)) {
+                    const numValue = parseFloat(fieldValue);
+                    if (isNaN(numValue) || 
+                        (rules.min !== undefined && numValue < rules.min) || 
+                        (rules.max !== undefined && numValue > rules.max)) {
+                        isValid = false;
+                        errorMessage = rules.errorMessage;
+                    }
+                }
+
+                // Custom validation
+                if (isValid && fieldValue && rules.customValidation && !rules.customValidation(fieldValue)) {
+                    isValid = false;
+                    errorMessage = rules.errorMessage;
+                }
+
+                this.displayValidationResult(field, isValid, errorMessage);
+                return isValid;
+            }
+
+            // Software Testing Rule 6: Visual Feedback System
+            displayValidationResult(field, isValid, errorMessage) {
+                const errorElement = field.parentNode.querySelector('.error-message');
+                
+                field.classList.remove('error', 'success');
+                
+                if (!isValid) {
+                    field.classList.add('error');
+                    if (errorElement) {
+                        errorElement.textContent = errorMessage;
+                        errorElement.style.display = 'block';
+                    }
+                } else if (field.value.trim()) {
+                    field.classList.add('success');
+                    if (errorElement) {
+                        errorElement.style.display = 'none';
+                    }
+                } else {
+                    if (errorElement) {
+                        errorElement.style.display = 'none';
+                    }
+                }
+            }
+
+            // Software Testing Rule 7: Form Submission with Comprehensive Validation
+            handleSubmit(e) {
+                e.preventDefault();
+                
+                // Comprehensive form validation
+                const allFields = this.form.querySelectorAll('input, select, textarea');
+                let isFormValid = true;
+                
+                allFields.forEach(field => {
+                    if (!this.validateField(field)) {
+                        isFormValid = false;
+                    }
+                });
+
+                // File upload validation
+                const requiredFiles = ['transcript', 'essay'];
+                requiredFiles.forEach(fileName => {
+                    const fileInput = document.getElementById(fileName);
+                    if (!fileInput.files.length) {
+                        isFormValid = false;
+                        this.displayValidationResult(fileInput, false, 'This file is required');
+                    }
+                });
+
+                // Terms and conditions validation
+                const termsCheckbox = document.getElementById('terms');
+                if (!termsCheckbox.checked) {
+                    isFormValid = false;
+                    const errorElement = termsCheckbox.parentNode.parentNode.querySelector('.error-message');
+                    if (errorElement) {
+                        errorElement.style.display = 'block';
+                    }
+                }
+
+                if (isFormValid) {
+                    this.submitForm();
+                } else {
+                    // Focus on first error field
+                    const firstError = this.form.querySelector('.error');
+                    if (firstError) {
+                        firstError.focus();
+                        firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                }
+            }
+
+            // Software Testing Rule 8: Asynchronous Operations Simulation
+            submitForm() {
+                const submitBtn = document.querySelector('.submit-btn');
+                const loading = document.querySelector('.loading');
+                const successMessage = document.querySelector('.success-message');
+                
+                // Disable form during submission
+                submitBtn.disabled = true;
+                loading.style.display = 'block';
+                
+                // Simulate API call with random success/failure for testing
+                setTimeout(() => {
+                    const isSuccess = Math.random() > 0.1; // 90% success rate for testing
+                    
+                    loading.style.display = 'none';
+                    
+                    if (isSuccess) {
+                        successMessage.style.display = 'block';
+                        this.form.reset();
+                        this.updateProgress();
+                    } else {
+                        alert('Submission failed. Please try again.');
+                        submitBtn.disabled = false;
+                    }
+                }, 2000);
+            }
+
+            // Software Testing Rule 9: File Upload Validation
+            handleFileUpload(e) {
+                const file = e.target.files[0];
+                const fileNameDisplay = e.target.parentNode.querySelector('.file-name');
+                const maxSize = 5 * 1024 * 1024; // 5MB limit
+                const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+                
+                if (file) {
+                    let isValid = true;
+                    let errorMessage = '';
+                    
+                    // File size validation
+                    if (file.size > maxSize) {
+                        isValid = false;
+                        errorMessage = 'File size must be less than 5MB';
+                    }
+                    
+                    // File type validation
+                    if (isValid && !allowedTypes.includes(file.type)) {
+                        isValid = false;
+                        errorMessage = 'Only PDF and Word documents are allowed';
+                    }
+                    
+                    if (isValid) {
+                        fileNameDisplay.textContent = `Selected: ${file.name}`;
+                        this.displayValidationResult(e.target, true, '');
+                    } else {
+                        fileNameDisplay.textContent = '';
+                        e.target.value = '';
+                        this.displayValidationResult(e.target, false, errorMessage);
+                    }
+                }
+            }
+
+            // Software Testing Rule 10: Progress Tracking
+            updateProgress() {
+                const requiredFields = this.form.querySelectorAll('[required]');
+                let filledFields = 0;
+                
+                requiredFields.forEach(field => {
+                    if (field.type === 'file') {
+                        if (field.files.length > 0) filledFields++;
+                    } else if (field.type === 'checkbox') {
+                        if (field.checked) filledFields++;
+                    } else {
+                        if (field.value.trim()) filledFields++;
+                    }
+                });
+                
+                const progress = (filledFields / requiredFields.length) * 100;
+                this.progressFill.style.width = `${progress}%`;
+            }
+
+            // Software Testing Rule 11: Testing Utilities
+            setupTestingShortcuts() {
+                // Add keyboard shortcuts for testing (Ctrl+Shift+T for test data)
+                document.addEventListener('keydown', (e) => {
+                    if (e.ctrlKey && e.shiftKey && e.key === 'T') {
+                        this.fillTestData('valid');
+                    }
+                    if (e.ctrlKey && e.shiftKey && e.key === 'I') {
+                        this.fillTestData('invalid');
+                    }
+                });
+            }
+
+            fillTestData(type) {
+                const data = type === 'valid' ? this.testData.validData : this.testData.invalidData;
+                
+                Object.keys(data).forEach(fieldName => {
+                    const field = this.form.querySelector(`[name="${fieldName}"]`);
+                    if (field) {
+                        field.value = data[fieldName];
+                        this.validateField(field);
+                    }
+                });
+                
+                this.updateProgress();
+            }
+
+            getFieldLabel(fieldName) {
+                const field = this.form.querySelector(`[name="${fieldName}"]`);
+                const label = field ? field.parentNode.querySelector('label') : null;
+                return label ? label.textContent.replace(' *', '') : fieldName;
+            }
+
+            // Software Testing Rule 12: Performance Monitoring
+            measurePerformance() {
+                const start = performance.now();
+                // Simulate heavy operation
+                for (let i = 0; i < 10000; i++) {
+                    this.validateField(document.getElementById('firstName'));
+                }
+                const end = performance.now();
+                console.log(`Validation performance: ${end - start} milliseconds`);
+                return end - start;
+            }
+
+            // Software Testing Rule 13: Cross-browser Compatibility Tests
+            checkBrowserCompatibility() {
+                const features = {
+                    localStorage: typeof Storage !== "undefined",
+                    flexbox: CSS.supports('display', 'flex'),
+                    grid: CSS.supports('display', 'grid'),
+                    customProperties: CSS.supports('color', 'var(--test)'),
+                    fetch: typeof fetch !== 'undefined',
+                    promises: typeof Promise !== 'undefined',
+                    es6: (function() {
+                        try { eval('let x = 1'); return true; } catch(e) { return false; }
+                    })()
+                };
+                
+                console.log('Browser Compatibility Report:', features);
+                return features;
+            }
+
+            // Software Testing Rule 14: Accessibility Testing
+            checkAccessibility() {
+                const issues = [];
+                
+                // Check for missing labels
+                const inputs = this.form.querySelectorAll('input, select, textarea');
+                inputs.forEach(input => {
+                    const label = this.form.querySelector(`label[for="${input.id}"]`);
+                    if (!label && !input.getAttribute('aria-label')) {
+                        issues.push(`Missing label for input: ${input.name || input.id}`);
+                    }
+                });
+                
+                // Check color contrast (basic check)
+                const elements = this.form.querySelectorAll('*');
+                elements.forEach(el => {
+                    const styles = window.getComputedStyle(el);
+                    const bgColor = styles.backgroundColor;
+                    const textColor = styles.color;
+                    
+                    if (bgColor && textColor && bgColor !== 'rgba(0, 0, 0, 0)') {
+                        // Simple contrast check (in real scenario, use proper contrast calculation)
+                        const contrast = this.calculateContrast(bgColor, textColor);
+                        if (contrast < 4.5) {
+                            issues.push(`Low contrast detected on element: ${el.tagName}`);
+                        }
+                    }
+                });
+                
+                console.log('Accessibility Issues:', issues);
+                return issues;
+            }
+
+            // Software Testing Rule 15: Security Testing
+            performSecurityChecks() {
+                const securityIssues = [];
+                
+                // Check for XSS vulnerabilities in form inputs
+                const inputs = this.form.querySelectorAll('input[type="text"], input[type="email"], textarea');
+                inputs.forEach(input => {
+                    const value = input.value;
+                    if (value.includes('<script>') || value.includes('javascript:') || value.includes('onload=')) {
+                        securityIssues.push(`Potential XSS in field: ${input.name}`);
+                        input.value = this.sanitizeInput(value);
+                    }
+                });
+                
+                // Check HTTPS requirement
+                if (location.protocol !== 'https:' && location.hostname !== 'localhost') {
+                    securityIssues.push('Form should be served over HTTPS');
+                }
+                
+                // Check for sensitive data in localStorage
+                try {
+                    for (let key in localStorage) {
+                        if (key.includes('password') || key.includes('ssn') || key.includes('credit')) {
+                            securityIssues.push(`Sensitive data in localStorage: ${key}`);
+                        }
+                    }
+                } catch (e) {
+                    // localStorage not available
+                }
+                
+                console.log('Security Issues:', securityIssues);
+                return securityIssues;
+            }
+
+            // Software Testing Rule 16: Load Testing Simulation
+            simulateLoadTest(numberOfUsers = 100) {
+                console.log(`Starting load test with ${numberOfUsers} users...`);
+                const startTime = performance.now();
+                
+                const promises = [];
+                for (let i = 0; i < numberOfUsers; i++) {
+                    promises.push(new Promise(resolve => {
+                        setTimeout(() => {
+                            // Simulate user interactions
+                            this.simulateUserInteraction();
+                            resolve();
+                        }, Math.random() * 1000);
+                    }));
+                }
+                
+                Promise.all(promises).then(() => {
+                    const endTime = performance.now();
+                    console.log(`Load test completed in ${endTime - startTime} milliseconds`);
+                    console.log(`Average time per user: ${(endTime - startTime) / numberOfUsers} milliseconds`);
+                });
+            }
+
+            // Software Testing Rule 17: User Interaction Simulation
+            simulateUserInteraction() {
+                const actions = [
+                    () => this.fillRandomField(),
+                    () => this.validateRandomField(),
+                    () => this.triggerFileUpload(),
+                    () => this.toggleCheckbox()
+                ];
+                
+                const randomAction = actions[Math.floor(Math.random() * actions.length)];
+                randomAction();
+            }
+
+            // Helper methods for testing
+            fillRandomField() {
+                const textInputs = this.form.querySelectorAll('input[type="text"], input[type="email"]');
+                if (textInputs.length > 0) {
+                    const randomInput = textInputs[Math.floor(Math.random() * textInputs.length)];
+                    randomInput.value = `test_${Math.random().toString(36).substr(2, 9)}`;
+                    this.validateField(randomInput);
+                }
+            }
+
+            validateRandomField() {
+                const allInputs = this.form.querySelectorAll('input, select, textarea');
+                if (allInputs.length > 0) {
+                    const randomInput = allInputs[Math.floor(Math.random() * allInputs.length)];
+                    this.validateField(randomInput);
+                }
+            }
+
+            triggerFileUpload() {
+                // Simulate file selection (in real testing, you'd use actual file objects)
+                const fileInputs = this.form.querySelectorAll('input[type="file"]');
+                if (fileInputs.length > 0) {
+                    const randomFileInput = fileInputs[Math.floor(Math.random() * fileInputs.length)];
+                    console.log(`Simulating file upload for: ${randomFileInput.name}`);
+                }
+            }
+
+            toggleCheckbox() {
+                const checkboxes = this.form.querySelectorAll('input[type="checkbox"]');
+                if (checkboxes.length > 0) {
+                    const randomCheckbox = checkboxes[Math.floor(Math.random() * checkboxes.length)];
+                    randomCheckbox.checked = !randomCheckbox.checked;
+                }
+            }
+
+            // Utility methods
+            sanitizeInput(input) {
+                return input
+                    .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+                    .replace(/javascript:/gi, '')
+                    .replace(/on\w+\s*=/gi, '');
+            }
+
+            calculateContrast(color1, color2) {
+                // Simplified contrast calculation (use proper WCAG algorithm in production)
+                const rgb1 = this.parseColor(color1);
+                const rgb2 = this.parseColor(color2);
+                
+                const l1 = this.getLuminance(rgb1);
+                const l2 = this.getLuminance(rgb2);
+                
+                const lighter = Math.max(l1, l2);
+                const darker = Math.min(l1, l2);
+                
+                return (lighter + 0.05) / (darker + 0.05);
+            }
+
+            parseColor(color) {
+                // Basic color parsing (extend for full support)
+                const match = color.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+                return match ? [parseInt(match[1]), parseInt(match[2]), parseInt(match[3])] : [0, 0, 0];
+            }
+
+            getLuminance([r, g, b]) {
+                const [rs, gs, bs] = [r, g, b].map(c => {
+                    c = c / 255;
+                    return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+                });
+                return 0.2126 * rs + 0.7152 * gs + 0.0722 * bs;
+            }
+
+            // Software Testing Rule 18: Test Suite Runner
+            runTestSuite() {
+                console.log('🧪 Running Comprehensive Test Suite...');
+                
+                const testResults = {
+                    validation: this.testValidationRules(),
+                    performance: this.testPerformance(),
+                    accessibility: this.testAccessibility(),
+                    security: this.testSecurity(),
+                    compatibility: this.testCompatibility(),
+                    usability: this.testUsability()
+                };
+                
+                console.log('📊 Test Results Summary:', testResults);
+                return testResults;
+            }
+
+            testValidationRules() {
+                console.log('Testing validation rules...');
+                let passed = 0;
+                let failed = 0;
+                
+                // Test valid inputs
+                Object.entries(this.testData.validData).forEach(([field, value]) => {
+                    const input = this.form.querySelector(`[name="${field}"]`);
+                    if (input) {
+                        input.value = value;
+                        if (this.validateField(input)) {
+                            passed++;
+                        } else {
+                            failed++;
+                            console.error(`❌ Valid data failed validation for ${field}: ${value}`);
+                        }
+                    }
+                });
+                
+                // Test invalid inputs
+                Object.entries(this.testData.invalidData).forEach(([field, value]) => {
+                    const input = this.form.querySelector(`[name="${field}"]`);
+                    if (input) {
+                        input.value = value;
+                        if (!this.validateField(input)) {
+                            passed++;
+                        } else {
+                            failed++;
+                            console.error(`❌ Invalid data passed validation for ${field}: ${value}`);
+                        }
+                    }
+                });
+                
+                return { passed, failed, success: failed === 0 };
+            }
+
+            testPerformance() {
+                console.log('Testing performance...');
+                const performanceTime = this.measurePerformance();
+                const isAcceptable = performanceTime < 100; // Less than 100ms is acceptable
+                
+                return {
+                    time: performanceTime,
+                    acceptable: isAcceptable,
+                    success: isAcceptable
+                };
+            }
+
+            testAccessibility() {
+                console.log('Testing accessibility...');
+                const issues = this.checkAccessibility();
+                return {
+                    issues: issues.length,
+                    details: issues,
+                    success: issues.length === 0
+                };
+            }
+
+            testSecurity() {
+                console.log('Testing security...');
+                const issues = this.performSecurityChecks();
+                return {
+                    issues: issues.length,
+                    details: issues,
+                    success: issues.length === 0
+                };
+            }
+
+            testCompatibility() {
+                console.log('Testing browser compatibility...');
+                const features = this.checkBrowserCompatibility();
+                const requiredFeatures = ['localStorage', 'flexbox', 'fetch', 'promises'];
+                const supportedFeatures = requiredFeatures.filter(feature => features[feature]);
+                
+                return {
+                    supported: supportedFeatures.length,
+                    required: requiredFeatures.length,
+                    features: features,
+                    success: supportedFeatures.length === requiredFeatures.length
+                };
+            }
+
+            testUsability() {
+                console.log('Testing usability...');
+                const usabilityScore = this.calculateUsabilityScore();
+                
+                return {
+                    score: usabilityScore,
+                    success: usabilityScore >= 80 // 80% is considered good
+                };
+            }
+
+            calculateUsabilityScore() {
+                let score = 100;
+                
+                // Check form length (penalty for too many fields)
+                const totalFields = this.form.querySelectorAll('input, select, textarea').length;
+                if (totalFields > 20) score -= 10;
+                
+                // Check for helpful error messages
+                const errorMessages = this.form.querySelectorAll('.error-message');
+                if (errorMessages.length < totalFields * 0.8) score -= 15;
+                
+                // Check for progress indication
+                const progressBar = this.form.querySelector('.progress-bar');
+                if (!progressBar) score -= 10;
+                
+                // Check for required field indicators
+                const requiredFields = this.form.querySelectorAll('[required]');
+                const requiredIndicators = this.form.querySelectorAll('.required');
+                if (requiredIndicators.length < requiredFields.length) score -= 10;
+                
+                // Check for responsive design
+                const isResponsive = window.getComputedStyle(this.form).display === 'block';
+                if (!isResponsive) score -= 15;
+                
+                return Math.max(0, score);
+            }
+        }
+
+        // Software Testing Rule 19: Initialize Testing Framework
+        document.addEventListener('DOMContentLoaded', function() {
+            const validator = new AdmissionFormValidator();
+            
+            // Make validator globally available for console testing
+            window.formValidator = validator;
+            
+            // Add test buttons (hidden by default, shown with ?test=1 parameter)
+            if (window.location.search.includes('test=1')) {
+                const testContainer = document.createElement('div');
+                testContainer.style.cssText = `
+                    position: fixed;
+                    bottom: 20px;
+                    right: 20px;
+                    background: #333;
+                    color: white;
+                    padding: 15px;
+                    border-radius: 8px;
+                    z-index: 1000;
+                    font-size: 12px;
+                `;
+                
+                testContainer.innerHTML = `
+                    <div style="margin-bottom: 10px;"><strong>Testing Panel</strong></div>
+                    <button onclick="window.formValidator.runTestSuite()" style="margin: 2px; padding: 5px 10px; font-size: 11px;">Run All Tests</button><br>
+                    <button onclick="window.formValidator.fillTestData('valid')" style="margin: 2px; padding: 5px 10px; font-size: 11px;">Fill Valid Data</button><br>
+                    <button onclick="window.formValidator.fillTestData('invalid')" style="margin: 2px; padding: 5px 10px; font-size: 11px;">Fill Invalid Data</button><br>
+                    <button onclick="window.formValidator.simulateLoadTest(50)" style="margin: 2px; padding: 5px 10px; font-size: 11px;">Load Test</button><br>
+                    <div style="margin-top: 10px; font-size: 10px; opacity: 0.8;">
+                        Shortcuts:<br>
+                        Ctrl+Shift+T: Valid data<br>
+                        Ctrl+Shift+I: Invalid data
+                    </div>
+                `;
+                
+                document.body.appendChild(testContainer);
+                
+                console.log(`
+🧪 TESTING MODE ENABLED
+===================
+Available commands:
+- window.formValidator.runTestSuite()
+- window.formValidator.fillTestData('valid')
+- window.formValidator.fillTestData('invalid')
+- window.formValidator.simulateLoadTest(100)
+
+Keyboard shortcuts:
+- Ctrl+Shift+T: Fill with valid test data
+- Ctrl+Shift+I: Fill with invalid test data
+
+The form implements comprehensive software testing rules:
+1. ✅ Input Validation with boundary testing
+2. ✅ Real-time field validation
+3. ✅ Cross-browser compatibility checks
+4. ✅ Accessibility testing
+5. ✅ Security validation (XSS prevention)
+6. ✅ Performance monitoring
+7. ✅ Load testing simulation
+8. ✅ File upload validation
+9. ✅ Form submission handling
+10. ✅ Error handling and user feedback
+11. ✅ Test data management
+12. ✅ Progress tracking
+13. ✅ Responsive design testing
+14. ✅ Usability scoring
+15. ✅ Automated test suite
+
+Happy testing! 🚀
+                `);
+            }
+        });
+
+        // Software Testing Rule 20: Error Boundary and Global Error Handling
+        window.addEventListener('error', function(e) {
+            console.error('Global error caught:', e.error);
+            // In production, send error to logging service
+        });
+
+        window.addEventListener('unhandledrejection', function(e) {
+            console.error('Unhandled promise rejection:', e.reason);
+            // In production, send error to logging service
+        });
+    </script>
+</body>
+</html>
