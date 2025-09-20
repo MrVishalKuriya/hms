@@ -1,25 +1,187 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Hostel Management System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background: #fff;
+            padding: 20px;
+            width: 400px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .tab-buttons {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+
+        .tab-buttons button {
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        .form-section {
+            display: none;
+        }
+
+        .form-section.active {
+            display: block;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 6px 0;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+
+        button.submit {
+            width: 100%;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .message {
+            margin-top: 10px;
+            color: red;
+            text-align: center;
+        }
+    </style>
 </head>
+
 <body>
-    <nav>
-        <div>
-            <div>
-                <img src="" alt="" srcset="">
-            </div>
-            <div>
-                <ul>
-                    <li><a href="#">Home</a></li>
-                    <li><a href="#">About</a></li>
-                    <li><a href="#">Services</a></li>
-                    <li><a href="#">Contact</a></li>
-                </ul>
-            </div>
+    <div class="container">
+        <h2>Hostel Management</h2>
+
+        <div class="tab-buttons">
+            <button onclick="showTab('adminLogin')">Admin Login</button>
+            <button onclick="showTab('studentLogin')">Student Login</button>
+            <button onclick="showTab('studentRegister')">Student Register</button>
         </div>
-    </nav>
+
+        <!-- Admin Login Form -->
+        <div id="adminLogin" class="form-section active">
+            <input type="text" id="adminUsername" placeholder="Admin Username" required />
+            <input type="password" id="adminPassword" placeholder="Password" required />
+            <button class="submit" onclick="adminLogin()">Login as Admin</button>
+            <div class="message" id="adminMsg"></div>
+        </div>
+
+        <!-- Student Login Form -->
+        <div id="studentLogin" class="form-section">
+            <input type="text" id="studentIdLogin" placeholder="Student ID" required />
+            <input type="password" id="studentPasswordLogin" placeholder="Password" required />
+            <button class="submit" onclick="studentLogin()">Login as Student</button>
+            <div class="message" id="studentMsg"></div>
+        </div>
+
+        <!-- Student Registration Form -->
+        <div id="studentRegister" class="form-section">
+            <input type="text" id="studentId" placeholder="Student ID" required />
+            <input type="text" id="studentName" placeholder="Full Name" required />
+            <input type="email" id="studentEmail" placeholder="Email" required />
+            <input type="password" id="studentPassword" placeholder="Password" required />
+            <button class="submit" onclick="studentRegister()">Register</button>
+            <div class="message" id="registerMsg"></div>
+        </div>
+    </div>
+
+    <script>
+        function showTab(tabId) {
+            document.querySelectorAll('.form-section').forEach(section => section.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            clearMessages();
+        }
+
+        function clearMessages() {
+            document.getElementById('adminMsg').innerText = "";
+            document.getElementById('studentMsg').innerText = "";
+            document.getElementById('registerMsg').innerText = "";
+        }
+
+        function adminLogin() {
+            const username = document.getElementById('adminUsername').value;
+            const password = document.getElementById('adminPassword').value;
+
+            if (username === 'admin' && password === 'admin@123') {
+                alert('Admin login successful!');
+            } else {
+                document.getElementById('adminMsg').innerText = "Invalid admin credentials.";
+            }
+        }
+
+        function studentLogin() {
+            const studentId = document.getElementById('studentIdLogin').value;
+            const password = document.getElementById('studentPasswordLogin').value;
+
+            // For demo, using localStorage as temporary storage
+            const storedData = JSON.parse(localStorage.getItem(studentId));
+
+            if (storedData && storedData.password === password) {
+                alert('Student login successful!');
+            } else {
+                document.getElementById('studentMsg').innerText = "Invalid Student ID or password.";
+            }
+        }
+
+        function studentRegister() {
+            const studentId = document.getElementById('studentId').value.trim();
+            const name = document.getElementById('studentName').value.trim();
+            const email = document.getElementById('studentEmail').value.trim();
+            const password = document.getElementById('studentPassword').value.trim();
+
+            if (!studentId || !name || !email || !password) {
+                document.getElementById('registerMsg').innerText = "All fields are required.";
+                return;
+            }
+
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                document.getElementById('registerMsg').innerText = "Invalid email address.";
+                return;
+            }
+
+            if (password.length < 6) {
+                document.getElementById('registerMsg').innerText = "Password must be at least 6 characters.";
+                return;
+            }
+
+            if (localStorage.getItem(studentId)) {
+                document.getElementById('registerMsg').innerText = "Student ID already exists.";
+                return;
+            }
+
+            const studentData = { name, email, password };
+            localStorage.setItem(studentId, JSON.stringify(studentData));
+            document.getElementById('registerMsg').style.color = "green";
+            document.getElementById('registerMsg').innerText = "Registration successful! Now login.";
+        }
+    </script>
 </body>
+
 </html>

@@ -21,7 +21,7 @@ $ses->start();
 $loginId = $ses->Get("userIdLoged");
 $loginGrp = $ses->Get("userGroupId");
 $display = "";
-$displaytable = "none";
+$dilatable = "none";
 $GLOBALS['isData'] = "0";
 if ($ses->isExpired()) {
     header('Location:' . $base_url . 'login.php');
@@ -51,7 +51,7 @@ if ($ses->isExpired()) {
             $GLOBALS['output1'] .= '<option value="' . $row['userId'] . '">' . $row['name'] . '</option>';
         }
     } else {
-        echo '<script type="text/javascript"> alert("' . $result . '");</script>';
+        echo '<script type="text/javascript">alert("Could not retrieve student list.");</script>';
     }
 }
 function getTableData($userId, $db)
@@ -101,7 +101,7 @@ function getTableData($userId, $db)
                                 </table>
                             </div>';
         } else {
-            echo '<script type="text/javascript"> alert("' . $result . '");window.location="view.php";</script>';
+            echo '<script type="text/javascript"> alert("No attendance data found for the selected student.");window.location="view.php";</script>';
         }
     } else {
         echo '<script type="text/javascript"> alert("' . $msg . '");window.location="view.php";</script>';

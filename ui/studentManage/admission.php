@@ -145,6 +145,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 <div class="col-lg-4">
                                     <div class="form-group ">
                                         <label>Full Name</label>
+                                        <span style="color:red">*</span>
                                         <div class="input-group">
 
                                             <span class="input-group-addon"><i class="fa fa-leaf"></i> </span>
@@ -156,6 +157,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 <div class="col-lg-4">
                                     <div class="form-group ">
                                         <label>Student Id(As Login Id)</label>
+                                        <span style="color:red">*</span>
                                         <div class="input-group">
 
                                             <span class="input-group-addon"><i class="fa fa-info"></i> </span>
@@ -166,7 +168,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 </div>
                                 <div class="col-lg-4">
                                     <div class="form-group ">
-                                        <label>Cell No</label>
+                                        <label>Phone No</label>
+                                        <span style="color:red">*</span>
                                         <div class="input-group">
 
                                             <span class="input-group-addon"><i class="fa fa-mobile-phone"></i> </span>
@@ -181,7 +184,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <div class="col-lg-12">
                                 <div class="col-lg-4">
                                     <div class="form-group ">
-                                        <label>Email</label>
+                                        <label>Email_Id</label>
+                                        <span style="color:red">*</span>
                                         <div class="input-group">
 
                                             <span class="input-group-addon"><i class="fa fa-envelope"></i> </span>
@@ -193,6 +197,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 <div class="col-lg-4">
                                     <div class="form-group ">
                                         <label>Password</label>
+                                        <span style="color:red">*</span>
                                         <div class="input-group">
 
                                             <span class="input-group-addon"><i class="fa fa-key"></i> </span>
@@ -205,6 +210,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 <div class="col-lg-4">
                                     <div class="form-group ">
                                         <label>Confirm Password</label>
+                                        <span style="color:red">*</span>
                                         <div class="input-group">
 
                                             <span class="input-group-addon"><i class="fa fa-key"></i> </span>
@@ -220,7 +226,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <div class="col-lg-12">
                                 <div class="col-lg-4">
                                     <div class="form-group ">
-                                        <label>Photo</label>
+                                        <label>PassPort Size Photo:</label>
+                                        <span style="color:red">*</span>
                                         <div class="input-group">
 
                                             <input type="file" class="form-control" name="perPhoto" required>
@@ -231,6 +238,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 <div class="col-lg-4">
                                     <div class="form-group ">
                                         <label>Name Of Institute</label>
+                                        <span style="color:red">*</span>
                                         <div class="input-group">
 
                                             <span class="input-group-addon"><i class="fa fa-building"></i> </span>
@@ -242,6 +250,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 <div class="col-lg-4">
                                     <div class="form-group ">
                                         <label>Program</label>
+                                        <span style="color:red">*</span>
                                         <div class="input-group">
 
                                             <span class="input-group-addon"><i class="fa fa-book"></i> </span>
@@ -257,6 +266,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 <div class="col-lg-4">
                                     <div class="form-group ">
                                         <label>Batch No</label>
+                                        <span style="color:red">*</span>
                                         <div class="input-group">
 
                                             <span class="input-group-addon"><i class="fa fa-sort-numeric-asc"></i>
@@ -269,10 +279,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 <div class="col-lg-4">
                                     <div class="form-group">
                                         <label>Gender</label>
+                                        <span style="color:red">*</span>
                                         <select class="form-control" name="gender" required="">
                                             <option value="Male">Male</option>
                                             <option value="Female">Female</option>
-
                                         </select>
                                     </div>
                                 </div>
@@ -280,7 +290,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                     <div class="form-group ">
                                         <label>Date Of Birth</label>
                                         <div class="input-group date" id='dp1'>
-
                                             <span class="input-group-addon"><i class="fa fa-calendar"></i> </span>
                                             <input type="text" placeholder="Date Of Birth"
                                                 class="form-control datepicker" name="dob" required
@@ -296,7 +305,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                     <div class="form-group">
                                         <label>Blood Group</label>
                                         <select class="form-control" name="bloodGroup" required="">
-
                                             <option value="A(+)">A(+)</option>
                                             <option value="A(-)">A(-)</option>
                                             <option value="A(un)">A(unknown)</option>
@@ -328,7 +336,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 </div>
                                 <div class="col-lg-4">
                                     <div class="form-group ">
-                                        <label>National ID</label>
+                                        <label>National ID: </label>
+                                        <span style="color:red">*</span>
                                         <div class="input-group">
 
                                             <span class="input-group-addon"><i class="fa fa-info"></i> </span>
@@ -355,7 +364,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 </div>
                                 <div class="col-lg-4">
                                     <div class="form-group ">
-                                        <label>Father Name</label>
+                                        <label>Father Name: <span style="color:red">*</span></label>
                                         <div class="input-group">
 
                                             <span class="input-group-addon"><i class="fa fa-leaf"></i> </span>
@@ -366,10 +375,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 </div>
                                 <div class="col-lg-4">
                                     <div class="form-group ">
-                                        <label>Father Cell No</label>
-                                        <div class="input-group">
+                                        <label>Father Phone.No: <span style="color:red">*</span></label>
 
-                                            <span class="input-group-addon"><i class="fa fa-mobile-phone"></i> </span>
+                                        <div class=" input-group">
+
+                                            <span class="input-group-addon"><i class="fa fa-mobile-phone"></i>
+                                            </span>
                                             <input type="text" placeholder="Mobile No" class="form-control"
                                                 name="fatherCellNo" required>
                                         </div>
@@ -393,7 +404,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 </div>
                                 <div class="col-lg-4">
                                     <div class="form-group ">
-                                        <label>Mother Cell No</label>
+                                        <label>Mother Phone No: ( માતાં નો ફોન નંબર: )</label>
                                         <div class="input-group">
 
                                             <span class="input-group-addon"><i class="fa fa-mobile-phone"></i> </span>
@@ -404,7 +415,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 </div>
                                 <div class="col-lg-4">
                                     <div class="form-group ">
-                                        <label>Local Guardian</label>
+                                        <label>Local Guardian Name:</label>
                                         <div class="input-group">
 
                                             <span class="input-group-addon"><i class="fa fa-leaf"></i> </span>
@@ -419,12 +430,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <div class="col-lg-12">
                                 <div class="col-lg-4">
                                     <div class="form-group ">
-                                        <label>Local Guardian Cell No</label>
+                                        <label>Local Guardian Phone No</label>
                                         <div class="input-group">
 
                                             <span class="input-group-addon"><i class="fa fa-mobile-phone"></i> </span>
                                             <input type="text" placeholder="Mobile No" class="form-control"
-                                                name="localGuardianCell" required>
+                                                name="localGuardianCell">
                                         </div>
                                     </div>
 

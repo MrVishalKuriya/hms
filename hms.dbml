@@ -1,20 +1,21 @@
 -- phpMyAdmin SQL Dump
--- version 4.3.2
--- http://www.phpmyadmin.net
+-- version 5.2.1
+-- https://www.phpmyadmin.net/
 --
--- Host: localhost
--- Generation Time: Apr 21, 2015 at 12:49 AM
--- Server version: 5.5.41-0ubuntu0.14.04.1
--- PHP Version: 5.5.9-1ubuntu4.7
+-- Host: 127.0.0.1
+-- Generation Time: Sep 19, 2025 at 10:51 PM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
 SET time_zone = "+00:00";
 
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
+/*!40101 SET NAMES utf8mb4 */;
 
 --
 -- Database: `hms`
@@ -26,15 +27,14 @@ SET time_zone = "+00:00";
 -- Table structure for table `attendence`
 --
 
-CREATE TABLE IF NOT EXISTS `attendence` (
-  `serial` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `attendence` (
+  `serial` int(11) NOT NULL,
   `userId` varchar(10) NOT NULL,
   `date` date NOT NULL,
-  `isAbsence` enum('Yes','No') NOT NULL,
-  `isLeave` enum('Yes','No') NOT NULL,
-  `remark` varchar(100) NOT NULL,
-  PRIMARY KEY (`serial`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
+  `isAbsence` varchar(3) NOT NULL,
+  `isLeave` varchar(3) NOT NULL,
+  `remark` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `attendence`
@@ -42,9 +42,11 @@ CREATE TABLE IF NOT EXISTS `attendence` (
 
 INSERT INTO `attendence` (`serial`, `userId`, `date`, `isAbsence`, `isLeave`, `remark`) VALUES
 (13, 'U008', '2015-02-27', 'No', 'No', 'Self'),
-(14, 'U009', '2015-02-27', 'Yes', 'No', 'tte'),
+(14, 'U009', '2015-02-27', 'Yes', 'No', 'mother'),
 (15, 'U009', '2015-04-17', 'No', 'No', 'Self'),
-(16, 'U009', '2015-04-18', 'No', 'No', 'Self');
+(16, 'U009', '2015-04-18', 'No', 'No', 'Self'),
+(17, 'U0013', '2025-09-01', 'No', 'No', 'self'),
+(18, 'U0013', '2025-09-20', 'Yes', 'No', 'k');
 
 -- --------------------------------------------------------
 
@@ -52,13 +54,12 @@ INSERT INTO `attendence` (`serial`, `userId`, `date`, `isAbsence`, `isLeave`, `r
 -- Table structure for table `auto_id`
 --
 
-CREATE TABLE IF NOT EXISTS `auto_id` (
-  `serial` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `auto_id` (
+  `serial` int(11) NOT NULL,
   `prefix` varchar(10) NOT NULL,
   `number` int(11) NOT NULL,
-  `description` varchar(20) NOT NULL,
-  PRIMARY KEY (`serial`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+  `description` varchar(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `auto_id`
@@ -66,11 +67,11 @@ CREATE TABLE IF NOT EXISTS `auto_id` (
 
 INSERT INTO `auto_id` (`serial`, `prefix`, `number`, `description`) VALUES
 (1, 'UG', 1, 'User Group Id'),
-(2, 'U', 12, 'User Id'),
+(2, 'U', 15, 'User Id'),
 (3, 'EMP', 5, 'Employee Id'),
-(4, 'BL', 6, 'Block Id'),
-(5, 'RM', 7, 'Room Number'),
-(6, 'BIL', 10, 'Billing Id');
+(4, 'BL', 7, 'Block Id'),
+(5, 'RM', 8, 'Room Number'),
+(6, 'BIL', 15, 'Billing Id');
 
 -- --------------------------------------------------------
 
@@ -78,29 +79,33 @@ INSERT INTO `auto_id` (`serial`, `prefix`, `number`, `description`) VALUES
 -- Table structure for table `billing`
 --
 
-CREATE TABLE IF NOT EXISTS `billing` (
+CREATE TABLE `billing` (
   `billId` varchar(10) NOT NULL,
   `type` varchar(50) NOT NULL,
   `amount` decimal(18,2) NOT NULL,
-  `billTo` varchar(10) NOT NULL,
-  `billingDate` date NOT NULL,
-  PRIMARY KEY (`billId`, `type`, `billTo`, `billingDate`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `billTo` varchar(80) NOT NULL,
+  `billingDate` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `billing`
 --
 
 INSERT INTO `billing` (`billId`, `type`, `amount`, `billTo`, `billingDate`) VALUES
-('BIL007', 'Tv', 60.00, 'U008', '2015-02-27'),
 ('BIL007', 'Wifi', 300.00, 'U008', '2015-02-27'),
+('BIL007', 'Tv', 60.00, 'U008', '2015-02-27'),
 ('BIL008', 'Wifi', 300.00, 'U009', '2015-02-27'),
-('BIL009', 'Boishak Clelabration', 250.00, 'U009', '2015-04-17'),
 ('BIL009', 'Meal Cost Aprill', 2000.00, 'U009', '2015-04-17'),
-('BIL009', 'Paper', 50.00, 'U009', '2015-04-17'),
 ('BIL009', 'Rent', 3000.00, 'U009', '2015-04-17'),
+('BIL009', 'Wifi Net ', 500.00, 'U009', '2015-04-17'),
 ('BIL009', 'tv disc bill', 200.00, 'U009', '2015-04-17'),
-('BIL009', 'Wifi Net ', 500.00, 'U009', '2015-04-17');
+('BIL009', 'Paper', 50.00, 'U009', '2015-04-17'),
+('BIL009', 'Boishak Clelabration', 250.00, 'U009', '2015-04-17'),
+('BIL0010', 'food', 5600.00, 'U008', '2025-09-10'),
+('BIL0011', 'tyui', 67890.00, 'U008', '2025-09-10'),
+('BIL0012', 'computer ', 64000.00, 'U0013', '2025-09-11'),
+('BIL0013', 'ty', 90.00, 'U008', '2025-09-11'),
+('BIL0014', 'ty', 90.00, 'U008', '2025-09-11');
 
 -- --------------------------------------------------------
 
@@ -108,22 +113,21 @@ INSERT INTO `billing` (`billId`, `type`, `amount`, `billTo`, `billingDate`) VALU
 -- Table structure for table `blocks`
 --
 
-CREATE TABLE IF NOT EXISTS `blocks` (
+CREATE TABLE `blocks` (
   `blockId` varchar(10) NOT NULL,
   `blockNo` varchar(10) NOT NULL,
   `blockName` varchar(30) NOT NULL,
   `description` varchar(80) NOT NULL,
-  `isActive` enum('Y','N') NOT NULL,
-  PRIMARY KEY (`blockId`),
-  UNIQUE KEY `blockNo` (`blockNo`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `isActive` varchar(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `blocks`
 --
 
 INSERT INTO `blocks` (`blockId`, `blockNo`, `blockName`, `description`, `isActive`) VALUES
-('BL004', 'BL-01', 'First Block', 'North Part Of the colony', 'Y');
+('BL004', 'BL-01', 'First Block', 'North Part Of the colony', 'Y'),
+('BL006', 'BL-02', 'Second Block', 'East Part of The Colony', 'Y');
 
 -- --------------------------------------------------------
 
@@ -131,14 +135,13 @@ INSERT INTO `blocks` (`blockId`, `blockNo`, `blockName`, `description`, `isActiv
 -- Table structure for table `cost`
 --
 
-CREATE TABLE IF NOT EXISTS `cost` (
-  `serial` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `cost` (
+  `serial` int(11) NOT NULL,
   `type` varchar(50) NOT NULL,
   `amount` decimal(18,2) NOT NULL,
   `date` date NOT NULL,
-  `description` varchar(100) DEFAULT NULL,
-  PRIMARY KEY (`serial`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+  `description` varchar(100) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `cost`
@@ -146,7 +149,8 @@ CREATE TABLE IF NOT EXISTS `cost` (
 
 INSERT INTO `cost` (`serial`, `type`, `amount`, `date`, `description`) VALUES
 (4, 'Bazar', 2000.00, '2015-02-27', '2days Meal bazar'),
-(5, 'Net bill', 5000.00, '2015-04-18', 'BTCL Internet Connection Bill');
+(5, 'Net bill', 5000.00, '2015-04-18', 'BTCL Internet Connection Bill'),
+(6, 'farnichar', 5000.00, '2025-09-11', 'beds');
 
 -- --------------------------------------------------------
 
@@ -154,13 +158,12 @@ INSERT INTO `cost` (`serial`, `type`, `amount`, `date`, `description`) VALUES
 -- Table structure for table `deposit`
 --
 
-CREATE TABLE IF NOT EXISTS `deposit` (
-  `serial` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `deposit` (
+  `serial` int(11) NOT NULL,
   `userId` varchar(10) NOT NULL,
   `amount` decimal(18,2) NOT NULL,
-  `depositDate` date NOT NULL,
-  PRIMARY KEY (`serial`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+  `depositDate` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `deposit`
@@ -169,7 +172,12 @@ CREATE TABLE IF NOT EXISTS `deposit` (
 INSERT INTO `deposit` (`serial`, `userId`, `amount`, `depositDate`) VALUES
 (6, 'U008', 6000.00, '2015-02-27'),
 (7, 'U009', 5500.00, '2015-02-27'),
-(8, 'U009', 2000.00, '2015-04-17');
+(8, 'U009', 2000.00, '2015-04-17'),
+(9, 'U0013', 7000.00, '2025-09-11'),
+(10, 'U0013', 400.00, '2025-09-12'),
+(11, 'U0013', 400.00, '2025-09-12'),
+(12, 'U0013', 400.00, '2025-09-12'),
+(13, 'U0014', 4000.00, '2025-09-13');
 
 -- --------------------------------------------------------
 
@@ -177,13 +185,13 @@ INSERT INTO `deposit` (`serial`, `userId`, `amount`, `depositDate`) VALUES
 -- Table structure for table `employee`
 --
 
-CREATE TABLE IF NOT EXISTS `employee` (
-  `serial` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `employee` (
+  `serial` int(11) NOT NULL,
   `empId` varchar(10) NOT NULL,
   `userGroupId` varchar(10) NOT NULL,
   `name` varchar(50) NOT NULL,
   `empType` varchar(50) NOT NULL,
-  `gender` enum('Male','Female') NOT NULL,
+  `gender` varchar(10) NOT NULL,
   `dob` date NOT NULL,
   `cellNo` varchar(15) NOT NULL,
   `address` varchar(150) NOT NULL,
@@ -191,12 +199,9 @@ CREATE TABLE IF NOT EXISTS `employee` (
   `designation` varchar(50) NOT NULL,
   `salary` decimal(18,2) NOT NULL,
   `blockNo` varchar(10) NOT NULL,
-  `isActive` enum('Y','N') NOT NULL,
-  `perPhoto` varchar(20) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
-  PRIMARY KEY (`serial`),
-  UNIQUE KEY `empId` (`empId`),
-  UNIQUE KEY `cellNo` (`cellNo`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+  `isActive` varchar(1) NOT NULL,
+  `perPhoto` varchar(20) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `employee`
@@ -212,13 +217,12 @@ INSERT INTO `employee` (`serial`, `empId`, `userGroupId`, `name`, `empType`, `ge
 -- Table structure for table `feesinfo`
 --
 
-CREATE TABLE IF NOT EXISTS `feesinfo` (
-  `serial` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `feesinfo` (
+  `serial` int(11) NOT NULL,
   `type` varchar(80) NOT NULL,
   `description` varchar(100) DEFAULT NULL,
-  `amount` decimal(18,2) NOT NULL,
-  PRIMARY KEY (`serial`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
+  `amount` decimal(18,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `feesinfo`
@@ -235,13 +239,12 @@ INSERT INTO `feesinfo` (`serial`, `type`, `description`, `amount`) VALUES
 -- Table structure for table `meal`
 --
 
-CREATE TABLE IF NOT EXISTS `meal` (
-  `serial` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `meal` (
+  `serial` int(11) NOT NULL,
   `userId` varchar(10) NOT NULL,
   `noOfMeal` int(11) NOT NULL,
-  `date` date NOT NULL,
-  PRIMARY KEY (`serial`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
+  `date` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `meal`
@@ -250,7 +253,8 @@ CREATE TABLE IF NOT EXISTS `meal` (
 INSERT INTO `meal` (`serial`, `userId`, `noOfMeal`, `date`) VALUES
 (9, 'U009', 3, '2015-02-27'),
 (10, 'U008', 2, '2015-02-27'),
-(11, 'U009', 2, '2015-04-17');
+(11, 'U009', 3, '2015-04-17'),
+(12, 'U0013', 3, '2025-09-11');
 
 -- --------------------------------------------------------
 
@@ -258,11 +262,10 @@ INSERT INTO `meal` (`serial`, `userId`, `noOfMeal`, `date`) VALUES
 -- Table structure for table `mealrate`
 --
 
-CREATE TABLE IF NOT EXISTS `mealrate` (
+CREATE TABLE `mealrate` (
   `rate` decimal(18,2) NOT NULL,
-  `note` varchar(100) NOT NULL,
-  PRIMARY KEY (`rate`, `note`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `note` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `mealrate`
@@ -277,13 +280,12 @@ INSERT INTO `mealrate` (`rate`, `note`) VALUES
 -- Table structure for table `notice`
 --
 
-CREATE TABLE IF NOT EXISTS `notice` (
-  `serial` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `notice` (
+  `serial` int(11) NOT NULL,
   `title` varchar(100) NOT NULL,
   `description` varchar(500) NOT NULL,
-  `createdDate` datetime NOT NULL,
-  PRIMARY KEY (`serial`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+  `createdDate` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `notice`
@@ -291,7 +293,8 @@ CREATE TABLE IF NOT EXISTS `notice` (
 
 INSERT INTO `notice` (`serial`, `title`, `description`, `createdDate`) VALUES
 (6, '21st February Celebration', '21st February Celebration,rali,etc', '2015-02-27 15:34:40'),
-(7, 'Happy New Year 2015', 'Happy New Year', '2015-02-27 15:35:25');
+(7, 'Happy New Year 2015', 'Happy New Year', '2015-02-27 15:35:25'),
+(8, 'Navratriy', 'Happy Navratri ', '2025-09-11 07:40:45');
 
 -- --------------------------------------------------------
 
@@ -299,23 +302,23 @@ INSERT INTO `notice` (`serial`, `title`, `description`, `createdDate`) VALUES
 -- Table structure for table `payment`
 --
 
-CREATE TABLE IF NOT EXISTS `payment` (
-  `serial` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `payment` (
+  `serial` int(11) NOT NULL,
   `description` varchar(100) NOT NULL,
   `paymentTo` varchar(100) NOT NULL,
   `amount` decimal(18,2) NOT NULL,
   `paymentBy` varchar(50) NOT NULL,
-  `paymentDate` date NOT NULL,
-  PRIMARY KEY (`serial`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+  `paymentDate` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `payment`
 --
 
 INSERT INTO `payment` (`serial`, `description`, `paymentTo`, `amount`, `paymentBy`, `paymentDate`) VALUES
-(2, 'Hostel Equipment(TV)', 'Md Jolil', 4000.00, 'Cash', '2015-02-27'),
-(3, 'Paper Bill', 'Mr Silblu', 500.00, 'Cash', '2015-02-27');
+(2, 'Hostel Equipment(TV)', 'Md Jolil', 4500.00, 'Cash', '2025-09-10'),
+(3, 'Paper Bill', 'Mr Silblu', 500.00, 'Cash', '2015-02-27'),
+(4, 'clean rooms', 'clinar', 500.00, 'Cash', '2025-09-11');
 
 -- --------------------------------------------------------
 
@@ -323,15 +326,14 @@ INSERT INTO `payment` (`serial`, `description`, `paymentTo`, `amount`, `paymentB
 -- Table structure for table `rooms`
 --
 
-CREATE TABLE IF NOT EXISTS `rooms` (
+CREATE TABLE `rooms` (
   `roomId` varchar(10) NOT NULL,
   `roomNo` varchar(20) NOT NULL,
   `blockId` varchar(10) NOT NULL,
   `noOfSeat` int(11) NOT NULL,
   `description` varchar(50) DEFAULT NULL,
-  `isActive` enum('Y','N') NOT NULL,
-  PRIMARY KEY (`roomId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `isActive` varchar(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `rooms`
@@ -339,7 +341,8 @@ CREATE TABLE IF NOT EXISTS `rooms` (
 
 INSERT INTO `rooms` (`roomId`, `roomNo`, `blockId`, `noOfSeat`, `description`, `isActive`) VALUES
 ('RM004', 'R-01', 'BL-01', 4, 'Block-01(North)', 'Y'),
-('RM006', 'R-02', 'BL-01', 2, 'Block-01(North)', 'Y');
+('RM006', 'R-02', 'BL-01', 2, 'Block-01(North)', 'Y'),
+('RM007', 'R-03', 'BL-01', 5, 'Block-01(North Right)', 'Y');
 
 -- --------------------------------------------------------
 
@@ -347,14 +350,13 @@ INSERT INTO `rooms` (`roomId`, `roomNo`, `blockId`, `noOfSeat`, `description`, `
 -- Table structure for table `salary`
 --
 
-CREATE TABLE IF NOT EXISTS `salary` (
-  `serial` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `salary` (
+  `serial` int(11) NOT NULL,
   `empId` varchar(10) NOT NULL,
   `monthYear` varchar(30) NOT NULL,
   `amount` decimal(18,2) NOT NULL,
-  `addedDate` date NOT NULL,
-  PRIMARY KEY (`serial`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+  `addedDate` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `salary`
@@ -362,7 +364,8 @@ CREATE TABLE IF NOT EXISTS `salary` (
 
 INSERT INTO `salary` (`serial`, `empId`, `monthYear`, `amount`, `addedDate`) VALUES
 (4, 'EMP003', 'January-2015', 5000.00, '2015-02-27'),
-(5, 'EMP004', 'February-2015', 5000.00, '2015-02-27');
+(5, 'EMP004', 'February-2015', 5000.00, '2015-02-27'),
+(6, 'EMP003', 'February-2025', 7000.00, '2025-09-11');
 
 -- --------------------------------------------------------
 
@@ -370,19 +373,19 @@ INSERT INTO `salary` (`serial`, `empId`, `monthYear`, `amount`, `addedDate`) VAL
 -- Table structure for table `seataloc`
 --
 
-CREATE TABLE IF NOT EXISTS `seataloc` (
+CREATE TABLE `seataloc` (
   `userId` varchar(10) NOT NULL,
   `roomNo` varchar(10) NOT NULL,
   `blockNo` varchar(30) NOT NULL,
-  `monthlyRent` decimal(18,2) NOT NULL,
-  PRIMARY KEY (`userId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `monthlyRent` decimal(18,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `seataloc`
 --
 
 INSERT INTO `seataloc` (`userId`, `roomNo`, `blockNo`, `monthlyRent`) VALUES
+('U0013', 'R-01', 'BL-01', 6500.00),
 ('U009', 'R-02', 'BL-01', 7500.00);
 
 -- --------------------------------------------------------
@@ -391,26 +394,29 @@ INSERT INTO `seataloc` (`userId`, `roomNo`, `blockNo`, `monthlyRent`) VALUES
 -- Table structure for table `stdpayment`
 --
 
-CREATE TABLE IF NOT EXISTS `stdpayment` (
-  `serial` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `stdpayment` (
+  `serial` int(11) NOT NULL,
   `userId` varchar(10) NOT NULL,
   `paymentBy` varchar(50) NOT NULL,
   `transNo` varchar(50) NOT NULL,
   `amount` decimal(18,2) NOT NULL,
   `transDate` date NOT NULL,
   `remark` varchar(50) NOT NULL,
-  `isApprove` enum('Yes','No') NOT NULL,
-  PRIMARY KEY (`serial`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+  `isApprove` varchar(3) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `stdpayment`
 --
 
 INSERT INTO `stdpayment` (`serial`, `userId`, `paymentBy`, `transNo`, `amount`, `transDate`, `remark`, `isApprove`) VALUES
-(3, 'U008', 'DBBL', '+8801755305154', 6000.00, '2015-02-26', 'Feb,2015 Bill', 'Yes'),
+(3, 'U008', 'DBBL', '+8801755305154', 6000.00, '2015-02-26', 'Feb,2015 Bill', 'No'),
 (4, 'U009', 'Bank', 'DD-4556', 5500.00, '2015-02-27', 'test', 'Yes'),
-(5, 'U009', 'Bkash', '0185236974', 6000.00, '2015-04-17', 'all cost rent meal,net,tv', 'Yes');
+(5, 'U009', 'Bkash', '0185236974', 6000.00, '2015-04-17', 'all cost rent meal,net,tv', 'Yes'),
+(6, 'U008', 'Bank', '2345678901', 50000.00, '2025-09-17', 'dsfd', 'No'),
+(7, 'U008', 'DBBL', '7211149513', 55000.00, '2025-09-11', 'self', 'Yes'),
+(8, 'U0013', 'Bkash', '7211149512', 20000.00, '2025-09-03', 'penning ', 'Yes'),
+(9, 'U008', 'Bkash', '4567898765', 6999.00, '2025-09-24', 'itt', 'Yes');
 
 -- --------------------------------------------------------
 
@@ -418,8 +424,8 @@ INSERT INTO `stdpayment` (`serial`, `userId`, `paymentBy`, `transNo`, `amount`, 
 -- Table structure for table `studentinfo`
 --
 
-CREATE TABLE IF NOT EXISTS `studentinfo` (
-  `serial` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `studentinfo` (
+  `serial` int(11) NOT NULL,
   `userId` varchar(10) NOT NULL,
   `userGroupId` varchar(10) NOT NULL,
   `name` varchar(50) NOT NULL,
@@ -429,7 +435,7 @@ CREATE TABLE IF NOT EXISTS `studentinfo` (
   `nameOfInst` varchar(100) NOT NULL,
   `program` varchar(80) NOT NULL,
   `batchNo` varchar(10) NOT NULL,
-  `gender` enum('Male','Female') NOT NULL,
+  `gender` varchar(8) NOT NULL,
   `dob` date NOT NULL,
   `bloodGroup` varchar(5) NOT NULL,
   `nationality` varchar(30) NOT NULL,
@@ -445,18 +451,16 @@ CREATE TABLE IF NOT EXISTS `studentinfo` (
   `parmanentAddress` varchar(150) NOT NULL,
   `perPhoto` varchar(20) NOT NULL,
   `admitDate` date NOT NULL,
-  `isActive` enum('Y','N') NOT NULL,
-  PRIMARY KEY (`serial`),
-  UNIQUE KEY `userId` (`userId`),
-  UNIQUE KEY `email` (`email`),
-  UNIQUE KEY `cellNo` (`cellNo`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+  `isActive` varchar(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `studentinfo`
 --
 
 INSERT INTO `studentinfo` (`serial`, `userId`, `userGroupId`, `name`, `studentId`, `cellNo`, `email`, `nameOfInst`, `program`, `batchNo`, `gender`, `dob`, `bloodGroup`, `nationality`, `nationalId`, `passportNo`, `fatherName`, `motherName`, `fatherCellNo`, `motherCellNo`, `localGuardian`, `localGuardianCell`, `presentAddress`, `parmanentAddress`, `perPhoto`, `admitDate`, `isActive`) VALUES
+(10, 'U0013', 'UG004', 'kuriya vishal pravinbhai', '23BCA04131', '7211149512', 'vishalpravinbhai6@gmail.com', 'KSV', 'BCA', '1', 'Male', '2005-12-04', 'un', 'indiyan', '+91', '', 'Pravinbhai', 'Rashilaben', '9825882183', '9586894610', 'Ramesh ', '0000000000', ' Sector-25,Gandhinagar,Gujrat,India,382008', 'Navalgadh,Dhrangadhra,Surendranagar,Gujrat,inda,363320', 'U0013.jpg', '2025-09-11', 'Y'),
+(11, 'U0014', 'UG004', 'Patel Akshar ', 'AKSHAR_1234', '9313177242', 'patelsonu6220@gmail.com', 'SAL COLLEGE OF ENGINEERING', 'CHEMICAL ENGINEERING', '2', 'Male', '2004-08-07', 'A(+)', 'INDIAN', '912345', '', 'ANIL PATEL', 'GEETA BEN', '9876767898', '7656989878', 'ram', '123456778', ' ', '220sahkar colony', 'U0014.jpg', '2025-09-13', 'Y'),
 (8, 'U008', 'UG004', 'Md. Rasel', '151-15-1155', '+8801755000002', 'rasel@gmail.com', 'DIU', 'CSE', '34', 'Male', '1994-06-14', 'AB(+)', 'Bangladeshi', 'N/A', 'N/A', 'Mr. Father', '+8801722000000', 'Mst. Mother', '+8801722000005', 'Mr. Local Boy', '+8801722000001', ' Dhanmondi,Dhaka-1207 ', 'Dhanmondi,Dhaka-1207', 'U008.jpg', '2015-02-27', 'Y'),
 (9, 'U009', 'UG004', 'Md Zahidul', '151-15-1122', '+881722545660', 'zahidul@gmail.com', 'DIU', 'CSE', '34', 'Male', '2005-07-13', 'O(+)', 'Bangladeshi', 'N/A', 'N/A', 'Mr. Father', 'Mst Mother', '+8801710565958', '+8801710565958', 'Mr Local boy', '+8801710565960', ' Dhanmondi,Dhaka-1207', ' Dhanmondi,Dhaka-1207', 'U009.jpg', '2015-02-27', 'Y');
 
@@ -466,11 +470,10 @@ INSERT INTO `studentinfo` (`serial`, `userId`, `userGroupId`, `name`, `studentId
 -- Table structure for table `timeset`
 --
 
-CREATE TABLE IF NOT EXISTS `timeset` (
+CREATE TABLE `timeset` (
   `inTime` varchar(15) NOT NULL,
-  `outTime` varchar(15) NOT NULL,
-  PRIMARY KEY (`inTime`, `outTime`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `outTime` varchar(15) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `timeset`
@@ -485,14 +488,12 @@ INSERT INTO `timeset` (`inTime`, `outTime`) VALUES
 -- Table structure for table `usergroup`
 --
 
-CREATE TABLE IF NOT EXISTS `usergroup` (
-  `serial` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `usergroup` (
+  `serial` int(11) NOT NULL,
   `id` varchar(10) NOT NULL,
   `name` varchar(50) NOT NULL,
-  `description` varchar(100) NOT NULL,
-  PRIMARY KEY (`serial`),
-  UNIQUE KEY `id` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+  `description` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `usergroup`
@@ -510,19 +511,17 @@ INSERT INTO `usergroup` (`serial`, `id`, `name`, `description`) VALUES
 -- Table structure for table `users`
 --
 
-CREATE TABLE IF NOT EXISTS `users` (
-  `serial` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `users` (
+  `serial` int(11) NOT NULL,
   `userId` varchar(10) NOT NULL,
   `userGroupId` varchar(10) NOT NULL,
   `name` varchar(100) NOT NULL,
   `loginId` varchar(150) NOT NULL,
-  `password` varchar(255) NOT NULL,
+  `password` varchar(50) NOT NULL,
   `verifyCode` varchar(10) NOT NULL,
   `expireDate` date NOT NULL,
-  `isVerifed` enum('Y','N') NOT NULL,
-  PRIMARY KEY (`serial`),
-  UNIQUE KEY `userId` (`userId`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
+  `isVerifed` varchar(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `users`
@@ -531,77 +530,218 @@ CREATE TABLE IF NOT EXISTS `users` (
 INSERT INTO `users` (`serial`, `userId`, `userGroupId`, `name`, `loginId`, `password`, `verifyCode`, `expireDate`, `isVerifed`) VALUES
 (1, 'U001', 'UG001', 'System Admin', 'admin', '513b098ff55b4f375d6210a5f45996dd', 'av799', '2015-08-01', 'Y'),
 (10, 'U008', 'UG004', 'Md. Rasel', 'student', '513b098ff55b4f375d6210a5f45996dd', 'vhms2115', '2115-01-04', 'Y'),
-(14, 'EMP003', 'UG003', 'Mr. Sabbir Alam', 'employee', '513b098ff55b4f375d6210a5f45996dd', 'vhms2115', '2115-01-04', 'Y');
+(14, 'EMP003', 'UG003', 'Mr. Sabbir Alam', 'employee', '513b098ff55b4f375d6210a5f45996dd', 'vhms2115', '2115-01-04', 'Y'),
+(16, 'U0012', 'UG001', 'vishal', 'vishal', '513b098ff55b4f375d6210a5f45996dd', 'vhms2115', '2115-01-04', 'Y'),
+(17, 'U0013', 'UG004', 'kuriya vishal pravinbhai', '23BCA04131', 'eaeb61aae0b18ceb61464ba33a96c7bf', 'vhms2115', '2115-01-04', 'Y'),
+(18, 'U0014', 'UG004', 'Patel Akshar ', 'AKSHAR_1234', '513b098ff55b4f375d6210a5f45996dd', 'vhms2115', '2115-01-04', 'Y');
 
 --
--- Constraints for dumped tables
+-- Indexes for dumped tables
 --
 
 --
--- Constraints for table `attendence`
+-- Indexes for table `attendence`
 --
 ALTER TABLE `attendence`
-  ADD CONSTRAINT `attendence_ibfk_1` FOREIGN KEY (`userId`) REFERENCES `users` (`userId`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD PRIMARY KEY (`serial`),
+  ADD UNIQUE KEY `serial` (`serial`);
 
 --
--- Constraints for table `billing`
+-- Indexes for table `auto_id`
 --
-ALTER TABLE `billing`
-  ADD CONSTRAINT `billing_ibfk_1` FOREIGN KEY (`billTo`) REFERENCES `users` (`userId`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `auto_id`
+  ADD UNIQUE KEY `serial` (`serial`);
 
 --
--- Constraints for table `deposit`
+-- Indexes for table `blocks`
+--
+ALTER TABLE `blocks`
+  ADD PRIMARY KEY (`blockId`),
+  ADD UNIQUE KEY `blockId` (`blockId`);
+
+--
+-- Indexes for table `cost`
+--
+ALTER TABLE `cost`
+  ADD PRIMARY KEY (`serial`);
+
+--
+-- Indexes for table `deposit`
 --
 ALTER TABLE `deposit`
-  ADD CONSTRAINT `deposit_ibfk_1` FOREIGN KEY (`userId`) REFERENCES `users` (`userId`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD PRIMARY KEY (`serial`);
 
 --
--- Constraints for table `employee`
+-- Indexes for table `employee`
 --
 ALTER TABLE `employee`
-  ADD CONSTRAINT `employee_ibfk_1` FOREIGN KEY (`userGroupId`) REFERENCES `usergroup` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD PRIMARY KEY (`empId`),
+  ADD UNIQUE KEY `serial` (`serial`),
+  ADD UNIQUE KEY `cellNo` (`cellNo`);
 
 --
--- Constraints for table `meal`
+-- Indexes for table `feesinfo`
+--
+ALTER TABLE `feesinfo`
+  ADD PRIMARY KEY (`serial`);
+
+--
+-- Indexes for table `meal`
 --
 ALTER TABLE `meal`
-  ADD CONSTRAINT `meal_ibfk_1` FOREIGN KEY (`userId`) REFERENCES `users` (`userId`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD PRIMARY KEY (`serial`);
 
 --
--- Constraints for table `rooms`
+-- Indexes for table `notice`
+--
+ALTER TABLE `notice`
+  ADD PRIMARY KEY (`serial`),
+  ADD UNIQUE KEY `serial` (`serial`);
+
+--
+-- Indexes for table `payment`
+--
+ALTER TABLE `payment`
+  ADD PRIMARY KEY (`serial`);
+
+--
+-- Indexes for table `rooms`
 --
 ALTER TABLE `rooms`
-  ADD CONSTRAINT `rooms_ibfk_1` FOREIGN KEY (`blockId`) REFERENCES `blocks` (`blockNo`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD PRIMARY KEY (`roomId`);
 
 --
--- Constraints for table `salary`
+-- Indexes for table `salary`
 --
 ALTER TABLE `salary`
-  ADD CONSTRAINT `salary_ibfk_1` FOREIGN KEY (`empId`) REFERENCES `employee` (`empId`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD PRIMARY KEY (`serial`);
 
 --
--- Constraints for table `seataloc`
+-- Indexes for table `seataloc`
 --
 ALTER TABLE `seataloc`
-  ADD CONSTRAINT `seataloc_ibfk_1` FOREIGN KEY (`userId`) REFERENCES `users` (`userId`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD PRIMARY KEY (`userId`);
 
 --
--- Constraints for table `stdpayment`
+-- Indexes for table `stdpayment`
 --
 ALTER TABLE `stdpayment`
-  ADD CONSTRAINT `stdpayment_ibfk_1` FOREIGN KEY (`userId`) REFERENCES `users` (`userId`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD PRIMARY KEY (`serial`);
 
 --
--- Constraints for table `studentinfo`
+-- Indexes for table `studentinfo`
 --
 ALTER TABLE `studentinfo`
-  ADD CONSTRAINT `studentinfo_ibfk_1` FOREIGN KEY (`userGroupId`) REFERENCES `usergroup` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD PRIMARY KEY (`userId`,`serial`),
+  ADD UNIQUE KEY `serial` (`serial`),
+  ADD UNIQUE KEY `userId` (`userId`),
+  ADD UNIQUE KEY `email` (`email`),
+  ADD UNIQUE KEY `cellNo` (`cellNo`);
 
 --
--- Constraints for table `users`
+-- Indexes for table `usergroup`
+--
+ALTER TABLE `usergroup`
+  ADD UNIQUE KEY `serial` (`serial`),
+  ADD UNIQUE KEY `id` (`id`);
+
+--
+-- Indexes for table `users`
 --
 ALTER TABLE `users`
-  ADD CONSTRAINT `users_ibfk_1` FOREIGN KEY (`userGroupId`) REFERENCES `usergroup` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD PRIMARY KEY (`serial`),
+  ADD UNIQUE KEY `serial` (`serial`),
+  ADD UNIQUE KEY `serial_2` (`serial`),
+  ADD UNIQUE KEY `serial_3` (`serial`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `attendence`
+--
+ALTER TABLE `attendence`
+  MODIFY `serial` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+
+--
+-- AUTO_INCREMENT for table `auto_id`
+--
+ALTER TABLE `auto_id`
+  MODIFY `serial` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT for table `cost`
+--
+ALTER TABLE `cost`
+  MODIFY `serial` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT for table `deposit`
+--
+ALTER TABLE `deposit`
+  MODIFY `serial` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+
+--
+-- AUTO_INCREMENT for table `employee`
+--
+ALTER TABLE `employee`
+  MODIFY `serial` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `feesinfo`
+--
+ALTER TABLE `feesinfo`
+  MODIFY `serial` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+
+--
+-- AUTO_INCREMENT for table `meal`
+--
+ALTER TABLE `meal`
+  MODIFY `serial` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+
+--
+-- AUTO_INCREMENT for table `notice`
+--
+ALTER TABLE `notice`
+  MODIFY `serial` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- AUTO_INCREMENT for table `payment`
+--
+ALTER TABLE `payment`
+  MODIFY `serial` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `salary`
+--
+ALTER TABLE `salary`
+  MODIFY `serial` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT for table `stdpayment`
+--
+ALTER TABLE `stdpayment`
+  MODIFY `serial` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT for table `studentinfo`
+--
+ALTER TABLE `studentinfo`
+  MODIFY `serial` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+
+--
+-- AUTO_INCREMENT for table `usergroup`
+--
+ALTER TABLE `usergroup`
+  MODIFY `serial` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
+  MODIFY `serial` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

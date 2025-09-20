@@ -15,7 +15,11 @@ class handyCam
     public function  getAppDate($datestr)
     {
         $date = explode('-', $datestr);
-        return $date[2].'/'.$date[1].'/'.$date[0];
+        if(count($date) == 3)
+        {
+            return $date[2].'/'.$date[1].'/'.$date[0];
+        }
+        return "";
     }
     public function  parseAppDate($datestr)
     {

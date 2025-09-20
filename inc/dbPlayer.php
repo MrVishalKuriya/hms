@@ -6,6 +6,12 @@
  * Time: 10:55 PM
  */
 
+/**
+ * WARNING: This file contains SQL injection vulnerabilities.
+ * The update(), delete(), getData(), registration(), execNonQuery() and execDataTable() methods are not secure.
+ * It is highly recommended to refactor the code to use prepared statements for all database queries.
+ */
+
 namespace dbPlayer;
 
 
@@ -64,15 +70,19 @@ class dbPlayer {
 
     }
 
-    public function insertData($table,$data)
+    public function insertData($table, $data)
     {
-    $keys   = "`" . implode("`, `", array_keys($data)) . "`";
-    $values = "'" . implode("', '", $data) . "'";
-    //var_dump("INSERT INTO `{$table}` ({$keys}) VALUES ({$values})");
-    mysqli_query($this->con, "INSERT INTO `{$table}` ({$keys}) VALUES ({$values})");
+        $keys = "`" . implode("`, `", array_keys($data)) . "`";
+        $placeholders = implode(', ', array_fill(0, count($data), '?'));
+        $stmt = mysqli_prepare($this->con, "INSERT INTO `{$table}` ({$keys}) VALUES ({$placeholders})");
 
-    return mysqli_insert_id($this->con) . mysqli_error($this->con);
+        $types = str_repeat('s', count($data));
+        $values = array_values($data);
+        mysqli_stmt_bind_param($stmt, $types, ...$values);
 
+        mysqli_stmt_execute($stmt);
+
+        return mysqli_insert_id($this->con) . mysqli_error($this->con);
     }
     public function registration($query,$query2)
     {
@@ -121,27 +131,31 @@ class dbPlayer {
             return "true";
         }
     }
-    public  function  updateData($table,$conColumn,$conValue,$data)
+    public  function  updateData($table, $conColumn, $conValue, $data)
     {
         $updates = array();
+        $values = array();
+        $types = '';
+
         if (count($data) > 0) {
             foreach ($data as $key => $value) {
-                $value = mysqli_real_escape_string($this->con, $value); // this is dedicated to @Jon
-                $value = "'$value'";
-                $updates[] = "$key = $value";
+                $updates[] = "`$key` = ?";
+                $values[] = $value;
+                $types .= 's';
             }
         }
+
         $implodeArray = implode(', ', $updates);
-        $query = "UPDATE " . $table . " SET " . $implodeArray . " WHERE " . $conColumn . "='" . $conValue . "'";
-        //var_dump($query);
-        $res = mysqli_query($this->con, $query);
-        if(!$res)
-        {
-            return "Can't Update data ".mysqli_error($this->con);
-        }
-        else
-        {
+        $stmt = mysqli_prepare($this->con, "UPDATE `{$table}` SET {$implodeArray} WHERE `{$conColumn}` = ?");
+
+        $types .= 's';
+        $values[] = $conValue;
+        mysqli_stmt_bind_param($stmt, $types, ...$values);
+
+        if(mysqli_stmt_execute($stmt)) {
             return "true";
+        } else {
+            return "Can't Update data ".mysqli_error($this->con);
         }
     }
 
@@ -159,40 +173,47 @@ class dbPlayer {
         }
     }
 
-    public  function  getAutoId($prefix)
+    public function getAutoId($prefix)
     {
         $uId = "";
-        $q = "select number from auto_id where prefix='" . $prefix . "';";
-        $result = $this->getData($q);
+        $stmt = mysqli_prepare($this->con, "SELECT number FROM auto_id WHERE prefix = ?");
+        mysqli_stmt_bind_param($stmt, "s", $prefix);
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
         $userId = array();
         while($row = mysqli_fetch_assoc($result))
         {
             array_push($userId, $row['number']);
         }
-        // var_dump($UserId);
-        if(strlen($userId[0])>=1)
-        {
-            $uId = $prefix . "00" . $userId[0];
+
+        if(count($userId) > 0) {
+            if(strlen($userId[0]) >= 1)
+            {
+                $uId = $prefix . "00" . $userId[0];
+            }
+            elseif(strlen($userId[0]) == 2)
+            {
+                $uId = $prefix . "0" . $userId[0];
+            }
+            else
+            {
+                $uId = $prefix . $userId[0];
+            }
+            array_push($userId, $uId);
         }
-        elseif(strlen($userId[0])==2)
-        {
-            $uId = $prefix . "0" . $userId[0];
-        }
-        else
-        {
-            $uId = $prefix . $userId[0];
-        }
-        array_push($userId, $uId);
+
         return $userId;
-
     }
-    public  function  updateAutoId($value,$prefix)
+    public function updateAutoId($value, $prefix)
     {
-         $id =intval($value)+1;
-
-        $query="UPDATE auto_id set number=".$id." where prefix='".$prefix."';";
-        return $this->update($query);
-
+        $id = intval($value) + 1;
+        $stmt = mysqli_prepare($this->con, "UPDATE auto_id SET number = ? WHERE prefix = ?");
+        mysqli_stmt_bind_param($stmt, "is", $id, $prefix);
+        if(mysqli_stmt_execute($stmt)) {
+            return "true";
+        } else {
+            return "Can't update data ".mysqli_error($this->con);
+        }
     }
 
     public  function execNonQuery($query)

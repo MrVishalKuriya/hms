@@ -2,20 +2,9 @@
 
 /**
  * Created by PhpStorm.
- * User: troot
+ * User: root
  * Date: 1/5/15
-                                     </thead>
-                                    <tbody>';
-            while ($row = mysqli_fetch_array($result)) {
-                $GLOBALS['isData']="1";
-                $GLOBALS['output'] .= "<tr>";
-
-                $GLOBALS['output'] .= "<td>" . $row['type'] . "</td>";
-                $GLOBALS['output'] .= "<td>" . $row['amount'] . "</td";10:56 AM
- */
-
-?>
-<?php
+*/
 
 $GLOBALS['title'] = "Cost-HMS";
 $base_url = "http://localhost/hms/";
@@ -24,7 +13,8 @@ $GLOBALS['isData'] = "";
 require('./../../inc/sessionManager.php');
 require('./../../inc/dbPlayer.php');
 require('./../../inc/handyCam.php');
-require('./../../inc/fpdf.php');
+require_once('./../../inc/fpdf/fpdf.php');
+require_once('./../../inc/fpdf.php');
 $ses = new \sessionManager\sessionManager();
 $ses->start();
 $name = $ses->Get("name");
@@ -32,10 +22,9 @@ if ($ses->isExpired()) {
     header('Location:' . $base_url . 'login.php');
 } elseif ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST["btnPrint"])) {
-
         $db = new \dbPlayer\dbPlayer();
         printData($db);
-        // header( 'Location: view.php');
+        header( 'Location: view.php');
     } else {
         header('Location: view.php');
     }
@@ -56,13 +45,11 @@ if ($msg = "true") {
                                 <table id="paymentList" class="table table-striped table-bordered table-hover">
                                     <thead>
                                         <tr>
-
                                             <th>Cost Type</th>
                                              <th>Amount</th>
                                             <th>Description</th>
                                              <th>Date</th>
                                               <th>Action</th>
-
                                         </tr>
                                     </thead>
                                     <tbody>';
@@ -97,7 +84,7 @@ function  printData($db)
 {
 
 
-    class PDF extends FPDF
+    class CostPDF extends PDF
     {
         function Header()
         {
@@ -107,7 +94,7 @@ function  printData($db)
             $subtitle = "Localhost,Mirpur Road,Dhaka-1207";
             $this->Cell(80);
             // Arial bold 15
-            $this->SetFont('Arial', 'B', 16);
+            $this->SetFont('arial', 'B', 16);
             // Calculate width of title and position
             $w = $this->GetStringWidth($title) + 6;
             $this->SetX((210 - $w) / 2);
@@ -118,7 +105,7 @@ function  printData($db)
 
             $this->Cell(80);
             // Arial bold 15
-            $this->SetFont('Arial', '', 12);
+            $this->SetFont('arial', '', 12);
             // Calculate width of title and position
             $w = $this->GetStringWidth($subtitle) + 6;
             $this->SetX((210 - $w) / 2);
@@ -133,10 +120,10 @@ function  printData($db)
             // Position at 1.5 cm from bottom
             $this->SetY(-15);
             // Arial italic 8
-            $this->SetFont('Arial', 'B', 8);
+            $this->SetFont('arial', 'B', 8);
             $this->SetTextColor(0);
             // Page number
-            $this->Cell(0, 10, 'Page ' . $this->PageNo() . '/{nb}     Print Date:' . date("d/m/Y"), 0, 0, 'C');
+            $this->Cell(0, 10, 'Page ' . $this->PageNo() . '/{nb}Print Date:' . date("d/m/Y"), 0, 0, 'C');
         }
         function FancyTable($header, $data)
         {
@@ -144,7 +131,7 @@ function  printData($db)
             $this->SetFillColor(0, 166, 81);
             $this->SetTextColor(255);
             $this->SetDrawColor(128, 0, 0);
-            $this->SetLineWidth(.3);
+            // $this->SetLineWidth(0.3);
             $this->SetFont('', 'B');
             // Header
             $w = array(40, 30, 70, 40);
@@ -174,8 +161,8 @@ function  printData($db)
     }
 
     // Instanciation of inherited class
-    $pdf = new PDF('P', 'mm', 'A4');
-    $pdf->AliasNbPages();
+    $pdf = new CostPDF('P', 'mm', 'A4');
+    
     $pdf->AddPage();
     $pdf->SetFont('Times', '', 12);
     $pdf->SetFillColor(200, 220, 255);
@@ -183,13 +170,13 @@ function  printData($db)
     $dataall = LoadData($db);
     $billhead = "Hostel Cost List";
     $w = $pdf->GetStringWidth($billhead) + 4;
-    $pdf->SetLeftMargin(80);
+    
     $pdf->Cell($w, 10, $billhead, 0, 1, 'L', true);
     $pdf->Ln(5);
     $pdf->SetX(10);
     $header = array('Type', 'Amount', 'Description', 'Date');
     // $dataall =LoadData($db,$usId);
-    $pdf->SetFont('Arial', '', 14);
+    $pdf->SetFont('arial', '', 14);
     $pdf->FancyTable($header, $dataall);
     $pdf->Output("cost.pdf");
     echo '<script> window.open("cost.pdf", "_blank");</script>';
@@ -203,15 +190,15 @@ function LoadData($db)
     $result = $db->execDataTable($query);
     $paydata = array();
     $handyCam = new \handyCam\handyCam();
-    while ($row = mysqli_fetch_array($result)) {
+    while ($db_row = mysqli_fetch_array($result)) {
 
-        $rowd = array();
+        $row = array();
 
-        array_push($rowd, $row["type"]);
-        array_push($rowd, $row["amount"]);
-        array_push($rowd, $row["description"]);
-        array_push($rowd, $handyCam->getAppDate($row["date"]));
-        array_push($paydata, $rowd);
+        array_push($row, isset($db_row["type"]) ? $db_row["type"] : '');
+        array_push($row, isset($db_row["amount"]) ? $db_row["amount"] : '');
+        array_push($row, isset($db_row["description"]) ? $db_row["description"] : '');
+        array_push($row, isset($db_row["date"]) ? $handyCam->getAppDate($db_row["date"]) : '');
+        array_push($paydata, $row);
     }
 
     return $paydata;
@@ -267,10 +254,7 @@ function LoadData($db)
 
 <?php include('./../../footer.php'); ?>
 <script type="text/javascript">
-    $(document).ready(function() {
-
-
-
-        $('#paymentList').dataTable();
-    });
+$(document).ready(function() {
+    $('#paymentList').dataTable();
+});
 </script>

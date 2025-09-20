@@ -6,7 +6,7 @@ $base_url = "http://localhost/hms/";
 require('./../../inc/sessionManager.php');
 require('./../../inc/dbPlayer.php');
 require('./../../inc/handyCam.php');
-require('./../../inc/fpdf.php');
+require('./../../inc/fpdf/fpdf.php');
 
 $ses = new \sessionManager\sessionManager();
 $ses->start();
@@ -120,12 +120,12 @@ function getTableData($logGRP, $userId, $db)
             $GLOBALS['output'] .= '<td>' . htmlspecialchars($row['paymentBy'] ?? '') . '</td>';
             $GLOBALS['output'] .= '<td>' . htmlspecialchars($row['transNo'] ?? '') . '</td>';
             $GLOBALS['output'] .= '<td>' . htmlspecialchars($row['amount'] ?? '') . '</td>';
-            $GLOBALS['output'] .= '<td>' . htmlspecialchars($row['remark'] ?? '') . '</td>';
+            $GLOBALS['output'] .= '<td>' . htmlspecialchars($row['remark'] ?? '') . '</td>';    
             if ($logGRP !== "UG004") {
                 $GLOBALS['output'] .= '<td>
-                    <a title="Edit" class="btn btn-success btn-circle editBtn" href="#' . $row['serial'] . '"><i class="fa fa-pencil"></i></a>
-                    <a title="Delete" class="btn btn-danger btn-circle" href="view.php?id=' . $row['serial'] . '&wtd=delete"><i class="fa fa-trash"></i></a>
-                </td>';
+                                        <a title="Edit" class="btn btn-success btn-circle editBtn" href="view.php?id= '. $row['serial'] . '><i class="fa fa-pencil"></i></a>
+                                        <a title="Delete" class="btn btn-danger btn-circle" href="view.php?id=' . $row['serial'] . '><i class="fa fa-trash"></i></a>
+                                       </td>';
             } else {
                 $GLOBALS['output'] .= '<td>' . htmlspecialchars($row['isApprove'] ?? '') . '</td>';
             }
@@ -150,7 +150,7 @@ function printData($db)
         {
             $title = "DIU HOSTEL";
             $subtitle = "4/2, Sobhanbag, Mirpur Road, Dhaka-1207";
-            $logoPath = './../../files/photos/logo.jpg';
+            $logoPath = './../../files/photos/logo.png';
             if (file_exists($logoPath)) $this->Image($logoPath, 10, 10, 20);
 
             $this->SetFont('Helvetica', 'B', 16);
@@ -193,6 +193,16 @@ function printData($db)
             $this->SetX(10);
             $this->Cell(array_sum($w), 0, '', 'T');
         }
+
+        function SetLeftMargin($margin)
+        {
+            $this->SetX($margin);
+        }
+
+        function GetStringWidth($s)
+        {
+            return strlen($s) * 6;
+        }
     }
 
     $pdf = new PDFG('I', 'mm', 'A4');
@@ -203,7 +213,7 @@ function printData($db)
 
     $dataall = LoadData($db, $usId);
     $billhead = "Payment By: " . $GLOBALS["Name"];
-    $pdf->Setleftmargin(50);
+    $pdf->SetLeftMargin(50);
     $pdf->Cell($pdf->GetStringWidth($billhead) + 4, 10, $billhead, 0, 1, 'L', true);
     $pdf->Ln(5);
 
@@ -215,7 +225,7 @@ function printData($db)
     exit;
 }
 
-function LoadData($db) //, $userId
+function LoadData($db, $userId)
 {
     $query = "SELECT a.serial,b.name,a.transDate,a.paymentBy,a.transNo,a.amount,a.remark,a.isApprove FROM stdpayment a, studentinfo b WHERE a.userId='$userId' AND a.userId=b.userId AND b.isActive='Y'";
     $result = $db->execDataTable($query);
@@ -380,7 +390,7 @@ if ($loginGrp === "UG004") {
 <?php include('./../../footer.php'); ?>
 <script type="text/javascript">
 $(document).ready(function() {
-    $('#paymentList').dataTable();
+    $('#zpaymentList').dataTable();
     $('.editBtn').on('click', function() {
         $('#divview').hide();
         $('#editpayment').show();

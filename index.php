@@ -19,8 +19,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($msg == "true") {
             $userPass = md5("hms2015".$_POST['password']);
             $loginId = $_POST["email"];
-            $query = "select loginId,userGroupId,password,name,userId from users where loginId='" . $loginId . "' and password='" . $userPass . "';";
-            var_dump($query);
+            $query = "select loginId,userGroupId,password,name,userId from users where loginId='" . $loginId . "' and password='" . $userPass . "'";
             $result = $db->getData($query);
             //var_dump($result);
             $info = array();
@@ -109,7 +108,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                 <div class="login-panel panel panel-default">
 
-                    <div class="panel-heading " style="display: flex; flex-wrap: wrap; height: 60vh; width: 70vw;">
+                    <div class="panel-heading "
+                        style="display: flex; flex-wrap: wrap; height: 100%; justify-content: center;">
                         <div class="row">
                             <div class="col-md-12 col-sm-10 col-xs-10">
                                 <h4 class="pTitle">Hostel Management System</h4>

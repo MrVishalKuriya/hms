@@ -9,7 +9,7 @@ require('./../../inc/handyCam.php');
 $ses = new \sessionManager\sessionManager();
 $ses->start();
 
-$loginId = $ses->Get("userIdLoged");
+$loginId = $ses->Get("userIdLogged");
 $loginGrp = $ses->Get("userGroupId");
 
 if ($ses->isExpired()) {

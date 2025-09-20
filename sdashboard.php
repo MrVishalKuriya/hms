@@ -81,7 +81,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         $GLOBALS['totals']=array();
         // $data = array();
-        if(false===strpos((string)$result,"Can't"))
+        if(is_object($result))
         {
             while ($row = mysqli_fetch_array($result)) {
 
@@ -97,7 +97,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $GLOBALS['data']='';
         $result = $db->getData("SELECT serial,title,description,DATE_FORMAT(createdDate,'%D %M,%Y %h:%i:%s %p') as date FROM notice ORDER BY serial DESC LIMIT 4");
 
-        if(false===strpos((string)$result,"Can't"))
+        if(is_object($result))
         {
 
             $GLOBALS['data']=$result;

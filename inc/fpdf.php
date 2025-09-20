@@ -48,6 +48,9 @@ class PDF {
     //     if($this->pg>0) $this->out(sprintf('BT /F%d %.2F Tf ET',$this->cf['i'],$sz));
     // }
 	public function SetFont($family, $style = '', $size = 0) {
+    if ($family === '') {
+        $family = $this->ff;
+    }
     $family = strtolower($family === 'arial' ? 'helvetica' : $family);
     $style = strtoupper(str_replace('U', '', $style, $underlineCount));
     // $this->underline = $underlineCount > 0;
@@ -262,8 +265,16 @@ class PDF {
     }
     
     private function esc($s) {
-        return str_replace(['\\','(',')'],['\\\\',"\\(","\\)"],$s);
+        return str_replace(['\\','(',')'],['\\','\(','\)'],$s);
     }
+
+    public function AliasNbPages($alias = '{nb}') {}
+
+    public function PageNo() {
+        return $this->pg;
+    }
+
+    public function Image($file, $x=null, $y=null, $w=0, $h=0) {}
 }
 
 /* Usage Example:
